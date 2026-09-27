@@ -1,5 +1,33 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bob 2.0 Risk Dashboard</title><style>
-:root{font-family:Inter,system-ui,sans-serif;color:#eef2ff;background:#090d1a}body{max-width:1100px;margin:auto;padding:40px 20px}h1{margin-bottom:4px}.sub{color:#9ca8c7}.card{background:#12182b;border:1px solid #26304e;border-radius:16px;padding:22px;margin:24px 0}.metric{font-size:56px;font-weight:800;color:#7dd3fc}.bar{height:12px;background:#27304a;border-radius:9px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#38bdf8,#34d399)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #26304e}th{color:#9ca8c7}.pill{padding:5px 9px;border-radius:999px;font-size:12px}.tested{background:#064e3b;color:#6ee7b7}.pending{background:#4c1d1d;color:#fca5a5}.score{font-weight:700;color:#fbbf24}@media(max-width:700px){.hide{display:none}}
-</style></head><body><h1>Code Risk Dashboard</h1><div class="sub" id="stamp">Loading analysis…</div><section class="card"><div>Overall statement coverage</div><div class="metric"><span id="coverage">—</span>%</div><div class="bar"><div class="fill" id="fill"></div></div></section><section class="card"><h2>Risk-ranked files</h2><table><thead><tr><th>#</th><th>File</th><th>Risk</th><th class="hide">Churn</th><th class="hide">Complexity</th><th>Coverage</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></section><script>
-fetch('./risk-report.json?'+Date.now()).then(r=>{if(!r.ok)throw Error();return r.json()}).then(d=>{coverage.textContent=d.overallCoverage;fill.style.width=d.overallCoverage+'%';stamp.textContent='Generated '+new Date(d.generatedAt).toLocaleString();rows.innerHTML=d.files.map(x=>`<tr><td>${x.rank}</td><td>${x.file}</td><td class="score">${x.score}</td><td class="hide">${x.churn}</td><td class="hide">${x.complexity}</td><td>${x.coverage}%</td><td><span class="pill ${x.status}">${x.status}</span></td></tr>`).join('')}).catch(()=>stamp.textContent='Run npm run analyze to generate risk-report.json');
+:root{font-family:Inter,system-ui,sans-serif;color:#eef2ff;background:#090d1a}body{max-width:1100px;margin:auto;padding:24px 16px}header{display:flex;align-items:center;justify-content:space-between;gap:16px}h1{margin:0 0 4px;font-size:clamp(25px,7vw,36px)}button{border:0;border-radius:10px;padding:11px 14px;background:#38bdf8;color:#07111f;font-weight:700;cursor:pointer}.sub{color:#9ca8c7}.card{background:#12182b;border:1px solid #26304e;border-radius:16px;padding:18px;margin:20px 0}.metric{font-size:clamp(48px,14vw,64px);font-weight:800;color:#7dd3fc}.bar{height:12px;background:#27304a;border-radius:9px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#38bdf8,#34d399)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #26304e}th{color:#9ca8c7}.pill{padding:5px 9px;border-radius:999px;font-size:12px}.tested{background:#064e3b;color:#6ee7b7}.pending{background:#4c1d1d;color:#fca5a5}.score{font-weight:700;color:#fbbf24}@media(max-width:700px){.hide{display:none}th,td{padding:13px 5px;font-size:13px}.card{padding:15px}}
+</style></head><body><header><h1>Code Risk Dashboard</h1><button id="snapshot" type="button">Save snapshot</button></header><div class="sub" id="stamp">Loading analysis…</div><section class="card"><div>Overall statement coverage</div><div class="metric"><span id="coverage">—</span>%</div><div class="bar"><div class="fill" id="fill"></div></div></section><section class="card"><h2>Risk-ranked files</h2><table><thead><tr><th>#</th><th>File</th><th>Risk</th><th class="hide">Churn</th><th class="hide">Complexity</th><th>Coverage</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></section><script>
+let latestReport;
+
+document.querySelector('#snapshot').addEventListener('click', () => {
+  if (!latestReport) return;
+  const stamp = latestReport.generatedAt.replaceAll(':', '-').replaceAll('.', '-');
+  const blob = new Blob([JSON.stringify(latestReport, null, 2)], {type: 'application/json'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `risk-snapshot-${stamp}.json`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+
+async function refresh() {
+  try {
+    const response = await fetch('./risk-report.json?'+Date.now(), {cache: 'no-store'});
+    if (!response.ok) throw Error();
+    const d = await response.json();
+    latestReport = d;
+    coverage.textContent = d.overallCoverage;
+    fill.style.width = d.overallCoverage+'%';
+    stamp.textContent = 'Live · generated '+new Date(d.generatedAt).toLocaleString();
+    rows.innerHTML = d.files.map(x=>`<tr><td>${x.rank}</td><td>${x.file}</td><td class="score">${x.score}</td><td class="hide">${x.churn}</td><td class="hide">${x.complexity}</td><td>${x.coverage}%</td><td><span class="pill ${x.status}">${x.status}</span></td></tr>`).join('');
+  } catch {
+    stamp.textContent='Waiting for dashboard/risk-report.json…';
+  }
+}
+refresh();
+setInterval(refresh, 5000);
 </script></body></html>
