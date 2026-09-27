@@ -22,7 +22,10 @@
 	},
 	"scripts": {
 		"test": "xo && c8 ava && tsd",
-		"bench": "matcha benchmark.js"
+		"bench": "matcha benchmark.js",
+		"coverage:json": "c8 --all --include=\"source/**/*.js\" --include=\"tools/**/*.js\" --exclude=\"test/**\" --reporter=text --reporter=json ava",
+		"risk": "node tools/risk-analyzer.js --coverage coverage/coverage-final.json --output dashboard/risk-report.json --days 365",
+		"dashboard": "node tools/server.js"
 	},
 	"files": [
 		"source",
