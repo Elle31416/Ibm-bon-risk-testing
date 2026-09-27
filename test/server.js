@@ -1,7 +1,10 @@
 import fs from 'node:fs';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import test from 'ava';
+import { execaNode } from 'execa';
 import { createServer } from '../tools/server.js';
 
 function makeFixtureDir() {
@@ -122,4 +125,58 @@ test('createServer: two independent instances can run on different ports without
 	]);
 	t.is(a, '<h1>dashboard</h1>');
 	t.is(b, '<h1>b</h1>');
+});
+
+const serverEntryPath = fileURLToPath(new URL('../tools/server.js', import.meta.url));
+
+// The `if (isMain) { ...listen... }` entry-point guard is the only behavior
+// in tools/server.js that in-process tests cannot reach: it runs only when
+// the file is executed directly (`node tools/server.js`, i.e. `npm run
+// dashboard`), where it binds a real socket. Cover it the same way the
+// risk-analyzer CLI tests do — by spawning the real script in a child
+// process on a free port. (Note: the child's own V8 coverage is not merged
+// into the parent c8 report, because the child is signalled to stop at the
+// end of the test and a signalled Node process does not flush its coverage
+// file — verified experimentally. The test still proves the entry point
+// end-to-end; see the batch-3 note in evidence/coverage-log.md.)
+test('entry point: running `node tools/server.js` directly serves the dashboard on $PORT', async t => {
+	const probe = http.createServer();
+	await new Promise(resolve => probe.listen(0, '127.0.0.1', resolve));
+	const { port } = probe.address();
+	await new Promise(resolve => probe.close(resolve));
+
+	const child = execaNode(serverEntryPath, [], {
+		env: { ...process.env, PORT: String(port) },
+		timeout: 20000
+	});
+	t.teardown(() => child.kill('SIGTERM'));
+
+	const banner = await new Promise((resolve, reject) => {
+		let output = '';
+		const timer = setTimeout(() => reject(new Error('entry point did not print its banner within 10s')), 10000);
+		child.stdout.on('data', chunk => {
+			output += chunk;
+			if (output.includes('Dashboard:')) {
+				clearTimeout(timer);
+				resolve(output);
+			}
+		});
+		child.on('exit', code => {
+			clearTimeout(timer);
+			reject(new Error(`server exited early with code ${code}`));
+		});
+	});
+	t.true(banner.includes(`Dashboard: http://localhost:${port}`));
+
+	const root = await fetch(`http://127.0.0.1:${port}/`);
+	t.is(root.status, 200);
+	t.is(root.headers.get('content-type'), 'text/html');
+	t.true((await root.text()).includes('Code Risk Dashboard'));
+
+	const report = await fetch(`http://127.0.0.1:${port}/risk-report.json`);
+	t.is(report.status, 200);
+	t.is(report.headers.get('content-type'), 'application/json');
+	const body = await report.json();
+	t.is(body.weights.churn, 0.4);
+	t.true(body.files.length > 0);
 });

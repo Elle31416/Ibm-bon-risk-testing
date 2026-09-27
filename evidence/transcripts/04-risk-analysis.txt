@@ -1,0 +1,20 @@
+$ npm run risk   # analyze last 365 days of git history + coverage, rank by 0.40xchurn + 0.30xcomplexity + 0.30xcoverageGap
+
+> chalk@5.4.1 risk
+> node tools/risk-analyzer.js --coverage coverage/coverage-final.json --output dashboard/risk-report.json --days 365
+
+┌─────────┬──────┬───────────────────────────────────────────┬───────┬───────┬────────────┬──────────┬───────────┐
+│ (index) │ rank │ file                                      │ score │ churn │ complexity │ coverage │ status    │
+├─────────┼──────┼───────────────────────────────────────────┼───────┼───────┼────────────┼──────────┼───────────┤
+│ 0       │ 1    │ 'source/vendor/supports-color/index.js'   │ 78.8  │ 182   │ 56         │ 45.1     │ 'tested'  │
+│ 1       │ 2    │ 'source/index.js'                         │ 52.6  │ 225   │ 23         │ 99.1     │ 'tested'  │
+│ 2       │ 3    │ 'source/vendor/ansi-styles/index.js'      │ 50.2  │ 223   │ 14         │ 89.7     │ 'tested'  │
+│ 3       │ 4    │ 'source/vendor/supports-color/browser.js' │ 39.8  │ 34    │ 7          │ 0        │ 'pending' │
+│ 4       │ 5    │ 'tools/risk-lib.js'                       │ 28.3  │ 111   │ 16         │ 100      │ 'tested'  │
+│ 5       │ 6    │ 'tools/server.js'                         │ 13.9  │ 38    │ 9          │ 92.1     │ 'tested'  │
+│ 6       │ 7    │ 'tools/risk-analyzer.js'                  │ 11    │ 47    │ 5          │ 100      │ 'tested'  │
+│ 7       │ 8    │ 'source/utilities.js'                     │ 9.1   │ 33    │ 6          │ 100      │ 'tested'  │
+└─────────┴──────┴───────────────────────────────────────────┴───────┴───────┴────────────┴──────────┴───────────┘
+Overall coverage: 81.9%
+Report: dashboard/risk-report.json
+exit=0
