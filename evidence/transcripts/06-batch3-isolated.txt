@@ -1,0 +1,20 @@
+$ npx ava test/ansi256-model.js test/server.js   # batch 3 new tests, isolated
+
+  ✔ ansi256-model › ansi256 model renders a 256-color foreground sequence
+  ✔ ansi256-model › bgAnsi256 model renders a 256-color background sequence
+  ✔ ansi256-model › ansi256 model composes with modifier styles in the right close order
+  ✔ ansi256-model › ansi256 model emits plain text when color support is level 0
+  ✔ server › createServer: 404s for a file that does not exist
+  ✔ server › createServer: 404s a path-traversal attempt instead of serving files outside the dashboard dir
+  ✔ server › createServer: 404s a request for a same-prefix sibling directory (not just literal "..")
+  ✔ server › createServer: GET / serves index.html with an HTML content type (104ms)
+  ✔ server › createServer: GET /risk-report.json serves JSON with the right content type (110ms)
+  ✔ server › createServer: strips query strings before resolving the file (114ms)
+  ✔ server › createServer: falls back to text/plain for an unrecognized extension (116ms)
+  ✔ server › createServer: two independent instances can run on different ports without colliding (117ms)
+  ✔ server › createServer: serves known extensions with the right content type (127ms)
+  ✔ server › entry point: running `node tools/server.js` directly serves the dashboard on $PORT (133ms)
+  ─
+
+  14 tests passed
+exit=0

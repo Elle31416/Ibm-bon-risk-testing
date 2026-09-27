@@ -2,7 +2,7 @@
 
 ## Status
 
-A genuine task session has run end to end: repository facts confirmed, risk model reviewed and fixed, two test batches added highest-risk-first, coverage/risk re-measured after each batch, a full regression pass, and the dashboard verified live. Screenshots and demo video are still pending (see "Evidence placeholders").
+A genuine task session has run end to end: repository facts confirmed, risk model reviewed and fixed, two test batches added highest-risk-first, coverage/risk re-measured after each batch, a full regression pass, and the dashboard verified live. A third, smaller batch was added in a follow-up session (ansi256 model tests for `source/index.js` + an end-to-end test of the `tools/server.js` entry point), and every command of every session is captured verbatim under `evidence/transcripts/` and rendered in `evidence/session-screenshots.html`. Demo video is still pending.
 
 ## Method
 
@@ -44,6 +44,8 @@ Documented, not fixed: a Windows-path/POSIX-host coverage-key mismatch (never oc
 
 All three previously-untested hackathon tooling files (`risk-lib.js`, `risk-analyzer.js`, `server.js`) are now tested. The two remaining low-coverage items are upstream, vendored `supports-color` code that the Node-only AVA suite doesn't exercise by design (it's the browser build) — left untouched per "never modify production behavior" and "avoid broad rewrites."
 
+After batch 3 (this session) the same live `npm run risk` re-run shows `source/index.js` at **100% coverage** (score 52.3, rank 2) — its only uncovered statement was the `ansi256` model fallback, now tested. Note the live ranking on this fork reflects its single squash-merge commit (every line counts as "added" once, so churn ∝ file size); the original session's ranking with real multi-commit churn is preserved at `evidence/risk-report-session1.json`.
+
 ## Exact before/after results
 
 | Stage | Statements | Branches | Functions | Lines | Command |
@@ -52,16 +54,17 @@ All three previously-untested hackathon tooling files (`risk-lib.js`, `risk-anal
 | Prepared-repo baseline | 66.66% | 71.42% | 81.57% | 66.66% | `npm run coverage:json` |
 | Batch 1 — `tools/risk-lib.js` tests (40 tests) | 73.49% | 78.82% | 86.66% | 73.49% | `npm run coverage:json` |
 | Batch 2 — `tools/server.js` + `tools/risk-analyzer.js` tests (17 tests) | 81.85% | 81.67% | 91.11% | 81.85% | `npm run coverage:json` |
+| Batch 3 — `source/index.js` ansi256 model (4 tests) + `tools/server.js` entry-point e2e (1 test) | 82.08% | 82.38% | 91.11% | 82.08% | `npm run coverage:json` |
 
 Full numbers and per-batch narration: [`evidence/coverage-log.md`](evidence/coverage-log.md).
 
-**Regression:** `npx ava` — **89/89 tests pass** (32 upstream + 57 new). `npx tsd` passes with zero type errors. `npm test` (`xo && c8 ava && tsd`) does **not** complete, because `xo` fails on pre-existing style debt in `tools/*.js` (present before this session) and in the new, similarly-styled `test/*.js` files; since `xo` is first in the `&&` chain, it prevents `ava` from running under that specific script even though the tests themselves are green. This is called out explicitly rather than hidden — see the "npm test note" in the evidence log for the full explanation and why a full reformat was intentionally out of scope.
+**Regression:** `npx ava` — **94/94 tests pass** (32 upstream + 62 new). `npx tsd` passes with zero type errors. `npm test` (`xo && c8 ava && tsd`) does **not** complete, because `xo` fails on pre-existing style debt in `tools/*.js` (present before this session) and in the new, similarly-styled `test/*.js` files; since `xo` is first in the `&&` chain, it prevents `ava` from running under that specific script even though the tests themselves are green. This is called out explicitly rather than hidden — see the "npm test note" in the evidence log for the full explanation and why a full reformat was intentionally out of scope.
 
 ## Reproduce
 
 ```bash
 npm install
-npx ava              # 89/89 tests pass (npm test's xo step currently fails on pre-existing style debt — see evidence log)
+npx ava              # 94/94 tests pass (npm test's xo step currently fails on pre-existing style debt — see evidence log)
 npm run coverage:json
 npm run risk
 npm run dashboard
@@ -76,10 +79,13 @@ Open http://localhost:3000. See `BOB_TASK.md` for the complete task prompt and `
 - `source/vendor/supports-color/browser.js` remains untested; it's upstream browser-only code outside this session's scope.
 - `npm test`'s `xo` gate still fails on pre-existing/continued style debt in `tools/*.js` and the new `test/*.js` files (see above); `npx ava` + `npm run coverage:json` + `npx tsd` were used as the authoritative, ungamed signals throughout.
 
-## Evidence placeholders
+## Evidence
 
-- Analysis summary screenshot: `evidence/bob-analysis-summary.png` (pending)
-- Test-generation summary screenshot: `evidence/bob-test-summary.png` (pending)
-- Demo video: pending
+- **Task-session summary (all real numbers, commands, decisions):** [`SESSION_SUMMARY.md`](SESSION_SUMMARY.md)
+- **Screenshot-ready session transcript** (real terminal output, formatted): `evidence/session-screenshots.html`
+- **Raw command transcripts:** `evidence/transcripts/01-setup.txt` → `05-batch3-after.txt` (verbatim output, nothing pre-filled or edited)
+- **Coverage evidence log with per-batch narration:** `evidence/coverage-log.md`
+- **Original session-1 risk ranking:** `evidence/risk-report-session1.json`
+- Demo video: pending (not recorded — not claimed elsewhere)
 
 Do not replace placeholders with fabricated evidence.

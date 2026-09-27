@@ -1,0 +1,122 @@
+$ npm install --no-audit --no-fund (tail)
+(ran clean; exit 0 — see npm notice output)
+
+$ npm run coverage:json   # baseline before any changes in this session
+
+> chalk@5.4.1 coverage:json
+> c8 --all --include="source/**/*.js" --include="tools/**/*.js" --exclude="test/**" --reporter=text --reporter=json ava
+
+
+  ✔ instance › create an isolated context where colors can be disabled (by level)
+  ✔ instance › the `level` option should be a number from 0 to 3
+TERM: [none]
+platform: linux
+  ✔ chalk › don't add any styling when called as the base function
+  ✔ chalk › support multiple arguments in base function
+  ✔ chalk › support automatic casting to string
+  ✔ chalk › style string
+  ✔ chalk › support applying multiple styles at once
+  ✔ chalk › support nesting styles
+  ✔ chalk › support nesting styles of the same type (color, underline, bg)
+  ✔ chalk › reset all styles with `.reset()`
+  ✔ chalk › support caching multiple styles
+  ✔ chalk › alias gray to grey
+  ✔ chalk › support variable number of arguments
+  ✔ chalk › support falsy values
+  ✔ chalk › don't output escape codes if the input is empty
+  ✔ chalk › keep Function.prototype methods
+  ✔ chalk › line breaks should open and close colors
+  ✔ chalk › line breaks should open and close colors with CRLF
+  ✔ chalk › properly convert RGB to 16 colors on basic color terminals
+  ✔ chalk › properly convert RGB to 256 colors on basic color terminals
+  ✔ chalk › don't emit RGB codes if level is 0
+  ✔ chalk › supports blackBright color
+  ✔ chalk › sets correct level for chalkStderr and respects it
+  ✔ chalk › keeps function prototype methods
+  ✔ no-color-support › colors can be forced by using chalk.level
+  ✔ level › don't output colors when manually disabled
+  ✔ level › enable/disable colors based on overall chalk .level property, not individual instances
+  ✔ level › propagate enable/disable changes from child colors
+  ✔ level › disable colors if they are not supported
+  ✔ risk-lib › normalize: empty input returns empty array
+  ✔ risk-lib › normalize: all-zero values normalize to zero instead of NaN
+  ✔ risk-lib › normalize: scales values against the observed maximum
+  ✔ risk-lib › normalize: a single value normalizes to 1
+  ✔ risk-lib › resolveRenamedPath: leaves plain paths untouched
+  ✔ risk-lib › resolveRenamedPath: resolves a brace-style rename to the new path
+  ✔ risk-lib › resolveRenamedPath: resolves a nested brace-style rename
+  ✔ risk-lib › resolveRenamedPath: resolves a full-path rename with no shared prefix
+  ✔ risk-lib › parseNumstat: sums adds and deletes for a normal file
+  ✔ risk-lib › parseNumstat: accumulates churn for a file touched across multiple commits
+  ✔ risk-lib › parseNumstat: binary changes ("-	-") count as zero churn, not NaN
+  ✔ risk-lib › parseNumstat: ignores non-JS extensions
+  ✔ risk-lib › parseNumstat: ignores test, coverage, and node_modules paths
+  ✔ risk-lib › parseNumstat: attributes a same-directory rename to its new path
+  ✔ risk-lib › parseNumstat: attributes a cross-directory rename to its new path
+  ✔ risk-lib › parseNumstat: merges churn for a file renamed then edited again under the new name
+  ✔ risk-lib › parseNumstat: ignores blank lines and unrelated log noise
+  ✔ risk-lib › estimateComplexity: a straight-line function has baseline complexity 1
+  ✔ risk-lib › estimateComplexity: counts if/for/while/case/catch and logical operators
+  ✔ risk-lib › estimateComplexity: ignores decision-like keywords inside comments
+  ✔ risk-lib › estimateComplexity: ignores decision-like keywords inside block comments
+  ✔ risk-lib › estimateComplexity: ignores decision-like keywords inside strings
+  ✔ risk-lib › estimateComplexity: does not miscount optional chaining as a ternary
+  ✔ risk-lib › estimateComplexity: counts a real ternary as one decision
+  ✔ risk-lib › coverageByRelativePath: computes percentage and normalizes to posix-style relative paths
+  ✔ risk-lib › coverageByRelativePath: a file with zero statements is treated as fully covered
+  ✔ risk-lib › coverageByRelativePath: an empty coverage object yields an empty map
+  ✔ risk-lib › coverageByRelativePath: known limitation — a Windows-style key is not resolved to a posix path on a posix host
+  ✔ risk-lib › overallStatementCoverage: weights by statement count, not by per-file average
+  ✔ risk-lib › overallStatementCoverage: an empty or missing coverage report is 0%, not NaN
+  ✔ risk-lib › overallStatementCoverage: a fully covered report is 100%
+  ✔ risk-lib › rankFiles: ranks by weighted score and reports 1-based ranks
+  ✔ risk-lib › rankFiles: marks a file with any coverage as tested and 0% as pending
+  ✔ risk-lib › rankFiles: defaults missing coverage entries to 0 (uninstrumented == untested)
+  ✔ risk-lib › rankFiles: defaults missing complexity to 1, never 0
+  ✔ risk-lib › rankFiles: ties are broken deterministically by filename
+  ✔ risk-lib › rankFiles: an all-zero churn/complexity input still produces a stable, coverage-driven order
+  ✔ risk-lib › rankFiles: an empty file list produces an empty ranking
+  ✔ risk-lib › readJsonIfPresent: returns an empty object when the file is missing
+  ✔ risk-lib › readJsonIfPresent: parses an existing JSON file
+  ✔ risk-analyzer › risk-analyzer CLI: writes a statement-weighted overall coverage, not a naive per-file average (479ms)
+  ✔ risk-analyzer › risk-analyzer CLI: with equal churn and complexity, the coverage gap alone decides the ranking (453ms)
+  ✔ risk-analyzer › risk-analyzer CLI: follows a renamed file so its churn is not silently dropped (408ms)
+  ✔ risk-analyzer › risk-analyzer CLI: a --days window in the past excludes older churn (311ms)
+  ✔ risk-analyzer › risk-analyzer CLI: a repository with no commits yet does not crash (293ms)
+  ✔ risk-analyzer › risk-analyzer CLI: a directory that is not a git repository at all does not crash (232ms)
+  ✔ risk-analyzer › risk-analyzer CLI: a missing coverage file is treated as 0% rather than crashing (259ms)
+  ✔ server › createServer: 404s for a file that does not exist (108ms)
+  ✔ server › createServer: 404s a path-traversal attempt instead of serving files outside the dashboard dir (109ms)
+  ✔ server › createServer: 404s a request for a same-prefix sibling directory (not just literal "..") (119ms)
+  ✔ server › createServer: GET / serves index.html with an HTML content type (143ms)
+  ✔ risk-analyzer › risk-analyzer CLI: only considers source/ and tools/ files, excluding tests and dashboard output (194ms)
+  ✔ server › createServer: GET /risk-report.json serves JSON with the right content type (149ms)
+  ✔ server › createServer: strips query strings before resolving the file (150ms)
+  ✔ server › createServer: two independent instances can run on different ports without colliding (152ms)
+  ✔ server › createServer: serves known extensions with the right content type (161ms)
+  ✔ visible › visible: normal output when level > 0
+  ✔ visible › visible: no output when level is too low
+  ✔ visible › test switching back and forth between level == 0 and level > 0
+  ✔ server › createServer: falls back to text/plain for an unrecognized extension (3.1s)
+  ─
+
+  89 tests passed
+------------------------------|---------|----------|---------|---------|----------------------------
+File                          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s          
+------------------------------|---------|----------|---------|---------|----------------------------
+All files                     |   81.85 |    81.67 |   91.11 |   81.85 |                            
+ source                       |   99.22 |    95.23 |   94.73 |   99.22 |                            
+  index.js                    |   99.11 |    94.23 |   94.11 |   99.11 | 90-91                      
+  utilities.js                |     100 |      100 |     100 |     100 |                            
+ source/vendor/ansi-styles    |   89.68 |    63.63 |      80 |   89.68 |                            
+  index.js                    |   89.68 |    63.63 |      80 |   89.68 | ...170-171,178-180,194-195 
+ source/vendor/supports-color |   37.96 |       25 |   83.33 |   37.96 |                            
+  browser.js                  |       0 |        0 |       0 |       0 | 1-34                       
+  index.js                    |   45.05 |    26.08 |     100 |   45.05 | ...7,80-81,87-88,93,97-165 
+ tools                        |   98.46 |    92.68 |     100 |   98.46 |                            
+  risk-analyzer.js            |     100 |      100 |     100 |     100 |                            
+  risk-lib.js                 |     100 |    92.18 |     100 |     100 | 41,59-60,79                
+  server.js                   |    92.1 |    88.88 |     100 |    92.1 | 36-38                      
+------------------------------|---------|----------|---------|---------|----------------------------
+
+exit=0

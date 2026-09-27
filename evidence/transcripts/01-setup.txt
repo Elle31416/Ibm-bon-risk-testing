@@ -1,0 +1,15 @@
+$ git --version && node --version && npm --version
+git version 2.39.5
+v22.22.3
+10.9.8
+
+$ git branch --show-current && git log --oneline -3
+arena/01a0e2aa-ibm-bon-risk-testing
+5af2cbd Merge pull request #2 from Elle31416/arena/01a0e274-ibm-bon-risk-testing
+
+$ git ls-files | wc -l
+50
+
+$ git remote -v
+origin	https://github.com/Elle31416/Ibm-bon-risk-testing.git (fetch)
+origin	https://github.com/Elle31416/Ibm-bon-risk-testing.git (push)
