@@ -2,7 +2,7 @@
 
 ## Status
 
-A genuine task session has run end to end: repository facts confirmed, risk model reviewed and fixed, two test batches added highest-risk-first, coverage/risk re-measured after each batch, a full regression pass, and the dashboard verified live. A third, smaller batch was added in a follow-up session (ansi256 model tests for `source/index.js` + an end-to-end test of the `tools/server.js` entry point), and every command of every session is captured verbatim under `evidence/transcripts/` and rendered in `evidence/session-screenshots.html`. Demo video is still pending.
+A genuine task session has run end to end: repository facts confirmed, risk model reviewed and fixed, two test batches added highest-risk-first, coverage/risk re-measured after each batch, a full regression pass, and the dashboard verified live. A third, smaller batch was added in a follow-up session (ansi256 model tests for `source/index.js` + an end-to-end test of the `tools/server.js` entry point), and every command of every session is captured verbatim under `evidence/transcripts/` and rendered in `evidence/session-screenshots.html`. Demo video: production package is ready in [`video/`](video/) — filled narration script, storyboards, evidence + live-demo keyframes, and a final image-to-video agent prompt (`video/IMAGE_TO_VIDEO_PROMPT.md`); the rendered film itself is still pending.
 
 ## Method
 
@@ -86,6 +86,6 @@ Open http://localhost:3000. See `BOB_TASK.md` for the complete task prompt and `
 - **Raw command transcripts:** `evidence/transcripts/01-setup.txt` → `05-batch3-after.txt` (verbatim output, nothing pre-filled or edited)
 - **Coverage evidence log with per-batch narration:** `evidence/coverage-log.md`
 - **Original session-1 risk ranking:** `evidence/risk-report-session1.json`
-- Demo video: pending (not recorded — not claimed elsewhere)
+- Demo video: production package ready — [`video/VIDEO_SCRIPT.md`](video/VIDEO_SCRIPT.md) (2–3 min narration with every blank filled from real values) + [`video/IMAGE_TO_VIDEO_PROMPT.md`](video/IMAGE_TO_VIDEO_PROMPT.md) (keyframes + motion prompts for an image-to-video agent). The rendered film is not recorded — not claimed elsewhere.
 
 Do not replace placeholders with fabricated evidence.

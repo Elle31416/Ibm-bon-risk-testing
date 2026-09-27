@@ -35,6 +35,7 @@ The weights are visible, reviewable, and intentionally simple. Bob is asked to c
 | Upstream statement coverage | 99.61% |
 | Prepared-repository baseline | **66.66% statements** |
 | Dashboard | Dependency-free HTML served by Node.js |
+| Live demo | [ibm-bob-risk-dashboard.onrender.com](https://ibm-bob-risk-dashboard.onrender.com/) |
 
 The prepared baseline includes the newly added risk-analysis tooling. Those modules intentionally begin untested, creating a legitimate improvement runway without deleting, weakening, or bypassing the upstream tests.
 
@@ -111,10 +112,11 @@ Measured coverage is recorded in [`evidence/coverage-log.md`](evidence/coverage-
 |---|---:|---|
 | Upstream v5.4.1 | 99.61% | Verified |
 | Prepared repository | **66.66%** | Verified |
-| Bob test batch 1 (`tools/risk-lib.js`) | 73.49% | Verified |
-| Bob test batch 2 (`tools/server.js`, `tools/risk-analyzer.js`) / Final | **81.85%** | Verified |
+| Bob test batch 1 (`tools/risk-lib.js`, 40 tests) | 73.49% | Verified |
+| Bob test batch 2 (`tools/server.js`, `tools/risk-analyzer.js`, 17 tests) | 81.85% | Verified |
+| Bob test batch 3 (`source/index.js` ansi256 model + `tools/server.js` e2e, 5 tests) / **Final** | **82.08%** | Verified |
 
-See [`HACKATHON_README.md`](HACKATHON_README.md) and [`evidence/coverage-log.md`](evidence/coverage-log.md) for the full methodology, model fixes, and per-batch narration. Required analysis/test-generation screenshots and the demo video remain pending until captured from this session; no concept mockup is presented as execution evidence.
+Full regression: **94/94 AVA tests pass** (32 upstream + 62 added), `tsd` clean. See [`HACKATHON_README.md`](HACKATHON_README.md) and [`evidence/coverage-log.md`](evidence/coverage-log.md) for the full methodology, model fixes, and per-batch narration. Evidence screenshots of every stage are captured from real, verbatim command output under [`evidence/screenshots/`](evidence/screenshots/) (raw transcripts in [`evidence/transcripts/`](evidence/transcripts/)). The demo-video production package — filled narration script, evidence + live-demo keyframes, and a ready-to-run image-to-video prompt — is in [`video/`](video/); the rendered film itself remains pending. No concept mockup is presented as execution evidence.
 
 ## Repository map
 
@@ -125,9 +127,15 @@ See [`HACKATHON_README.md`](HACKATHON_README.md) and [`evidence/coverage-log.md`
 │   ├── index.html              # One-page risk dashboard
 │   └── risk-report.json        # Generated ranked data
 ├── evidence/
-│   └── coverage-log.md         # Before/batch/final measurements
+│   ├── coverage-log.md         # Before/batch/final measurements
+│   ├── screenshots/            # Terminal panels rendered from verbatim transcripts
+│   └── transcripts/            # Raw, unedited command output
+├── video/                      # Demo-video production package
+│   ├── VIDEO_SCRIPT.md         # 2–3 min narration, blanks filled from real values
+│   ├── IMAGE_TO_VIDEO_PROMPT.md# Final prompt for an image-to-video agent
+│   └── screenshots/            # Live-demo capture + Trip Wire title art
 ├── source/                     # Chalk production source
-├── test/                       # Existing upstream AVA tests
+├── test/                       # AVA tests (upstream + Bob-added)
 ├── tools/
 │   ├── risk-analyzer.js        # CLI orchestration and report generation
 │   ├── risk-lib.js             # Churn, complexity, coverage, ranking logic
@@ -138,14 +146,14 @@ See [`HACKATHON_README.md`](HACKATHON_README.md) and [`evidence/coverage-log.md`
 
 ## Demo story
 
-The 2–3 minute demo follows one clear arc:
+The 2–3 minute demo follows one clear arc (script: [`video/VIDEO_SCRIPT.md`](video/VIDEO_SCRIPT.md); production prompts: [`video/IMAGE_TO_VIDEO_PROMPT.md`](video/IMAGE_TO_VIDEO_PROMPT.md)):
 
-1. Show the verified 66.66% prepared baseline.
-2. Show Bob narrating the intersection of churn, complexity, and coverage.
-3. Explain the transparent risk formula and top-ranked files.
-4. Show Bob generating focused tests in batches.
-5. Rerun coverage and demonstrate the number moving.
-6. Refresh the dashboard and show tested versus pending risks.
+1. **Trip Wire intro** — the tripwire for your codebase, powered by IBM Bob 2.0.
+2. Show the verified 66.66% prepared baseline (real c8 output).
+3. Show Bob flagging `tools/risk-lib.js` as the highest risk and why.
+4. Explain the transparent risk formula and run the generated tests.
+5. Rerun coverage and demonstrate the number moving (66.66% → 73.49% → 82.08%).
+6. Show the live dashboard at [ibm-bob-risk-dashboard.onrender.com](https://ibm-bob-risk-dashboard.onrender.com/) — tested versus pending risks.
 7. Finish with the public repository and genuine Bob summaries.
 
 ## Design principles
