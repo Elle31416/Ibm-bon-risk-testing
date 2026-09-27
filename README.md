@@ -1,19 +1,21 @@
-# Risk-Driven Testing with IBM Bob 2.0
+# Trip Wire
 
-> **Test what is most likely to break—not merely what is easiest to cover.**
+### The tripwire for your codebase — powered by IBM Bob 2.0
 
-This hackathon project turns repository history, code complexity, and coverage gaps into an explainable file-level risk ranking. IBM Bob 2.0 is then directed to analyze the highest risks, generate focused tests in measurable batches, and narrate the reasoning judges can verify.
+> **Test what is most likely to break — not merely what is easiest to cover.**
 
-## Why this matters
+Trip Wire turns raw git history, code complexity, and coverage gaps into a single, explainable, file-level risk score. IBM Bob 2.0 is then pointed at the highest-risk files first, told to generate focused tests in measurable batches, and asked to narrate every step so the reasoning can be independently checked against real command output — not summarized after the fact.
 
-A coverage percentage answers **what ran**. It does not reveal:
+## Why Trip Wire
 
-- which files change most frequently;
-- which modules contain the most decision paths;
-- where low coverage overlaps with operational risk; or
-- what the team should test next.
+A coverage percentage only answers **what ran**. It never tells you:
 
-This project combines all three signals:
+- which files change most often;
+- which modules carry the most decision paths;
+- where low coverage overlaps with real operational risk; or
+- what to test *next*, given limited time.
+
+Trip Wire combines all three signals into one transparent formula:
 
 ```text
 Risk = 40% normalized churn
@@ -21,15 +23,15 @@ Risk = 40% normalized churn
      + 30% statement coverage gap
 ```
 
-The weights are visible, reviewable, and intentionally simple. Bob is asked to challenge the model rather than blindly trust it.
+The weights are visible, reviewable, and intentionally simple — Bob is asked to challenge the model rather than trust it blindly, and in practice it found and fixed three real bugs in the scoring logic before writing a single test (see [Results & evidence](#results--evidence)).
 
 ## Project at a glance
 
-| Item | Selection |
+| Item | Detail |
 |---|---|
 | Upstream project | [chalk/chalk](https://github.com/chalk/chalk), pinned to `v5.4.1` |
 | License | MIT |
-| Repository size at selection | Approximately 35 tracked files |
+| Repository size at selection | ~35 tracked files |
 | Existing suite | AVA, c8, XO, and tsd |
 | Upstream test result | 32 tests passed |
 | Upstream statement coverage | 99.61% |
@@ -37,7 +39,7 @@ The weights are visible, reviewable, and intentionally simple. Bob is asked to c
 | Dashboard | Dependency-free HTML served by Node.js |
 | Live demo | [ibm-bob-risk-dashboard.onrender.com](https://ibm-bob-risk-dashboard.onrender.com/) |
 
-The prepared baseline includes the newly added risk-analysis tooling. Those modules intentionally begin untested, creating a legitimate improvement runway without deleting, weakening, or bypassing the upstream tests.
+The prepared baseline includes the newly added risk-analysis tooling. Those modules intentionally start untested, creating a legitimate improvement runway without deleting, weakening, or bypassing any upstream test.
 
 ## How it works
 
@@ -62,20 +64,20 @@ c8 coverage JSON ──────┘
 | 4 | `tools/server.js` | 41.6 | 0% |
 | 5 | `source/vendor/supports-color/browser.js` | 33.8 | 0% |
 
-These are starting results, not unquestionable truth. In particular, Bob should inspect new-file churn, path handling, binary changes, ranking ties, and whether overall coverage is statement-weighted correctly.
+These are starting numbers, not final truth. Bob is specifically asked to inspect new-file churn, path handling, binary changes, ranking ties, and whether "overall coverage" is weighted correctly before trusting the ranking.
 
-## Reproduce locally
+## Run it yourself
 
 ### Requirements
 
 - Git
-- Node.js 20+ for this pinned repository
+- Node.js 20+
 - npm
-- IBM Bob 2.0 access for the genuine AI task session
+- IBM Bob 2.0 access, for the live analysis-and-test workflow
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
+git clone https://github.com/Elle31416/Ibm-bon-risk-testing.git
+cd Ibm-bon-risk-testing
 npm install
 
 # Run the unchanged upstream quality gate
@@ -93,36 +95,36 @@ npm run dashboard
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## IBM Bob 2.0 workflow
+## The Bob 2.0 workflow
 
-The complete, reproducible task prompt is in [`BOB_TASK.md`](BOB_TASK.md). It guides one evidence-rich task session through four stages:
+The complete, reproducible task prompt lives in [`BOB_TASK.md`](BOB_TASK.md). It guides one evidence-rich session through four stages:
 
 1. **Establish reality** — verify tools, license, branch, suite, and baseline.
-2. **Analyze risk** — narrate churn, complexity, coverage, and model limitations.
-3. **Test by priority** — add focused AVA tests in at least two batches.
-4. **Prove the result** — rerun regression, refresh the dashboard, and summarize evidence.
+2. **Analyze risk** — narrate churn, complexity, coverage, and the model's own limitations.
+3. **Test by priority** — add focused AVA tests in at least two batches, highest risk first.
+4. **Prove the result** — rerun the full regression, refresh the dashboard, summarize evidence.
 
-Bob is explicitly instructed not to fabricate results, hide failures, or change production behavior merely to increase coverage.
+Bob is explicitly instructed not to fabricate results, hide failures, or change production behavior just to inflate a coverage number.
 
-## Evidence and integrity
+## Results & evidence
 
-Measured coverage is recorded in [`evidence/coverage-log.md`](evidence/coverage-log.md).
+Every measurement below is real, machine-generated `c8` output — nothing is estimated.
 
 | Milestone | Statement coverage | Status |
 |---|---:|---|
 | Upstream v5.4.1 | 99.61% | Verified |
 | Prepared repository | **66.66%** | Verified |
-| Bob test batch 1 (`tools/risk-lib.js`, 40 tests) | 73.49% | Verified |
-| Bob test batch 2 (`tools/server.js`, `tools/risk-analyzer.js`, 17 tests) | 81.85% | Verified |
-| Bob test batch 3 (`source/index.js` ansi256 model + `tools/server.js` e2e, 5 tests) / **Final** | **82.08%** | Verified |
+| Batch 1 — `tools/risk-lib.js` (40 tests) | 73.49% | Verified |
+| Batch 2 — `tools/server.js`, `tools/risk-analyzer.js` (17 tests) | 81.85% | Verified |
+| Batch 3 — `source/index.js` ansi256 model + `tools/server.js` e2e (5 tests) / **Final** | **82.08%** | Verified |
 
-Full regression: **94/94 AVA tests pass** (32 upstream + 62 added), `tsd` clean. See [`HACKATHON_README.md`](HACKATHON_README.md) and [`evidence/coverage-log.md`](evidence/coverage-log.md) for the full methodology, model fixes, and per-batch narration. Evidence screenshots of every stage are captured from real, verbatim command output under [`evidence/screenshots/`](evidence/screenshots/) (raw transcripts in [`evidence/transcripts/`](evidence/transcripts/)). The demo-video production package — filled narration script, evidence + live-demo keyframes, and a ready-to-run image-to-video prompt — is in [`video/`](video/); the rendered film itself remains pending. No concept mockup is presented as execution evidence.
+Full regression: **94/94 AVA tests pass** (32 upstream + 62 added), `tsd` clean. For the full methodology, the bugs Bob found and fixed in the risk model, and per-batch narration, see [`HACKATHON_README.md`](HACKATHON_README.md) and [`evidence/coverage-log.md`](evidence/coverage-log.md). Every stage is backed by screenshots rendered from real, verbatim command output in [`evidence/screenshots/`](evidence/screenshots/) (raw transcripts in [`evidence/transcripts/`](evidence/transcripts/)). The demo-video production package — narration script, evidence and live-demo keyframes, and a ready-to-run image-to-video prompt — lives in [`video/`](video/); the rendered film itself remains pending, and no concept mockup is presented in its place.
 
 ## Repository map
 
 ```text
 ├── BOB_TASK.md                 # Full Bob task-session prompt
-├── HACKATHON_README.md         # Execution status and evidence pointers
+├── HACKATHON_README.md         # Detailed methodology and evidence pointers
 ├── dashboard/
 │   ├── index.html              # One-page risk dashboard
 │   └── risk-report.json        # Generated ranked data
@@ -131,7 +133,7 @@ Full regression: **94/94 AVA tests pass** (32 upstream + 62 added), `tsd` clean.
 │   ├── screenshots/            # Terminal panels rendered from verbatim transcripts
 │   └── transcripts/            # Raw, unedited command output
 ├── video/                      # Demo-video production package
-│   ├── VIDEO_SCRIPT.md         # 2–3 min narration, blanks filled from real values
+│   ├── VIDEO_SCRIPT.md         # 2–3 min narration, filled from real values
 │   ├── IMAGE_TO_VIDEO_PROMPT.md# Final prompt for an image-to-video agent
 │   └── screenshots/            # Live-demo capture + Trip Wire title art
 ├── source/                     # Chalk production source
@@ -144,26 +146,39 @@ Full regression: **94/94 AVA tests pass** (32 upstream + 62 added), `tsd` clean.
 └── UPSTREAM_README.md          # Original Chalk documentation
 ```
 
+## Built across four sessions (arena branches)
+
+Trip Wire was assembled incrementally, one working session per branch, each opened as its own pull request and merged straight into `main`. Every branch is still in the repository if you want to see the isolated diff of a single session rather than the squashed end state:
+
+| Branch | What it added | Merged as |
+|---|---|---|
+| [`arena/01a0e245-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e245-ibm-bon-risk-testing) | Unpacked the full Chalk history, fixed four real bugs in the risk-scoring model (statement-weighted coverage, rename-aware churn, deterministic tie-breaking, crash-safety on empty repos), and added test batches 1 and 2 | PR #1 |
+| [`arena/01a0e274-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e274-ibm-bon-risk-testing) | Adapted the dashboard for a mobile-friendly Render deployment | PR #2 |
+| [`arena/01a0e2aa-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e2aa-ibm-bon-risk-testing) | Added test batch 3 (ansi256 model tests plus a server entry-point end-to-end test) and captured individual per-session screenshots | PR #3 |
+| [`arena/01a0e2e4-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e2e4-ibm-bon-risk-testing) | Added the Trip Wire demo-video production package and finalized the results, live-demo link, and evidence | PR #4 |
+
+`main` always reflects the merged, current state described in this README; the arena branches are kept as the traceable record of how it got there.
+
 ## Demo story
 
 The 2–3 minute demo follows one clear arc (script: [`video/VIDEO_SCRIPT.md`](video/VIDEO_SCRIPT.md); production prompts: [`video/IMAGE_TO_VIDEO_PROMPT.md`](video/IMAGE_TO_VIDEO_PROMPT.md)):
 
 1. **Trip Wire intro** — the tripwire for your codebase, powered by IBM Bob 2.0.
 2. Show the verified 66.66% prepared baseline (real c8 output).
-3. Show Bob flagging `tools/risk-lib.js` as the highest risk and why.
+3. Show Bob flagging `tools/risk-lib.js` as the highest risk, and why.
 4. Explain the transparent risk formula and run the generated tests.
-5. Rerun coverage and demonstrate the number moving (66.66% → 73.49% → 82.08%).
+5. Rerun coverage and show the number move (66.66% → 73.49% → 82.08%).
 6. Show the live dashboard at [ibm-bob-risk-dashboard.onrender.com](https://ibm-bob-risk-dashboard.onrender.com/) — tested versus pending risks.
-7. Finish with the public repository and genuine Bob summaries.
+7. Close with the public repository and Bob's own summaries.
 
 ## Design principles
 
 - **Explainable:** every score decomposes into observable inputs.
 - **Risk-first:** test priority reflects change and complexity, not coverage alone.
 - **Measurable:** every test batch produces an exact coverage milestone.
-- **Reproducible:** commands, weights, reports, and evidence logs live in the repo.
-- **Honest:** pending Bob outputs remain clearly labelled until genuinely produced.
+- **Reproducible:** commands, weights, reports, and evidence logs all live in the repo.
+- **Honest:** pending outputs stay clearly labelled until they're genuinely produced.
 
 ## License and attribution
 
-This project builds on [Chalk](https://github.com/chalk/chalk), originally created by Sindre Sorhus and contributors. Chalk and the hackathon additions are distributed under the [MIT License](LICENSE). The original project documentation is preserved in [`UPSTREAM_README.md`](UPSTREAM_README.md).
+Trip Wire builds on [Chalk](https://github.com/chalk/chalk), originally created by Sindre Sorhus and contributors. Chalk and the Trip Wire additions are distributed under the [MIT License](LICENSE). The original project documentation is preserved in [`UPSTREAM_README.md`](UPSTREAM_README.md).
