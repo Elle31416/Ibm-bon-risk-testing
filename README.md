@@ -111,10 +111,10 @@ Measured coverage is recorded in [`evidence/coverage-log.md`](evidence/coverage-
 |---|---:|---|
 | Upstream v5.4.1 | 99.61% | Verified |
 | Prepared repository | **66.66%** | Verified |
-| Bob test batch 1 | Pending genuine run | Pending |
-| Final | Pending genuine run | Pending |
+| Bob test batch 1 (`tools/risk-lib.js`) | 73.49% | Verified |
+| Bob test batch 2 (`tools/server.js`, `tools/risk-analyzer.js`) / Final | **81.85%** | Verified |
 
-Required Bob analysis and test-generation screenshots remain pending until they are captured from an authentic authorized Bob session. No concept mockup is presented as execution evidence.
+See [`HACKATHON_README.md`](HACKATHON_README.md) and [`evidence/coverage-log.md`](evidence/coverage-log.md) for the full methodology, model fixes, and per-batch narration. Required analysis/test-generation screenshots and the demo video remain pending until captured from this session; no concept mockup is presented as execution evidence.
 
 ## Repository map
 

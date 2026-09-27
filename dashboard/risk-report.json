@@ -1,32 +1,23 @@
 {
-  "generatedAt": "2026-09-27T07:20:03.831Z",
+  "generatedAt": "2026-09-27T10:04:12.601Z",
   "weights": {
     "churn": 0.4,
     "complexity": 0.3,
     "coverageGap": 0.3
   },
-  "overallCoverage": 41.7,
+  "overallCoverage": 81.9,
   "files": [
     {
       "rank": 1,
       "file": "tools/risk-lib.js",
-      "score": 76.4,
-      "churn": 62,
-      "complexity": 12,
-      "coverage": 0,
-      "status": "pending"
+      "score": 48.6,
+      "churn": 115,
+      "complexity": 16,
+      "coverage": 100,
+      "status": "tested"
     },
     {
       "rank": 2,
-      "file": "tools/risk-analyzer.js",
-      "score": 55.3,
-      "churn": 35,
-      "complexity": 5,
-      "coverage": 0,
-      "status": "pending"
-    },
-    {
-      "rank": 3,
       "file": "source/vendor/supports-color/index.js",
       "score": 46.5,
       "churn": 0,
@@ -35,22 +26,31 @@
       "status": "tested"
     },
     {
-      "rank": 4,
-      "file": "tools/server.js",
-      "score": 41.6,
-      "churn": 13,
-      "complexity": 6,
-      "coverage": 0,
-      "status": "pending"
-    },
-    {
-      "rank": 5,
+      "rank": 3,
       "file": "source/vendor/supports-color/browser.js",
       "score": 33.8,
       "churn": 0,
       "complexity": 7,
       "coverage": 0,
       "status": "pending"
+    },
+    {
+      "rank": 4,
+      "file": "tools/server.js",
+      "score": 26,
+      "churn": 54,
+      "complexity": 9,
+      "coverage": 92.1,
+      "status": "tested"
+    },
+    {
+      "rank": 5,
+      "file": "tools/risk-analyzer.js",
+      "score": 22.5,
+      "churn": 57,
+      "complexity": 5,
+      "coverage": 100,
+      "status": "tested"
     },
     {
       "rank": 6,
