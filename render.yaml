@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ibm-bob-risk-dashboard
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run dashboard
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 20
