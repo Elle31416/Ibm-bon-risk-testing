@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { coverageByRelativePath, estimateComplexity, parseNumstat, rankFiles, readJsonIfPresent } from './risk-lib.js';
+import { coverageByRelativePath, estimateComplexity, overallStatementCoverage, parseNumstat, rankFiles, readJsonIfPresent } from './risk-lib.js';
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(name);
@@ -18,15 +18,27 @@ try {
   log = execFileSync('git', ['log', `--since=${days} days ago`, '--numstat', '--format='], { cwd: root, encoding: 'utf8' });
 } catch { console.warn('Warning: git history unavailable; churn will be zero.'); }
 const churn = parseNumstat(log);
-const files = execFileSync('git', ['ls-files', '*.js', '*.mjs', '*.cjs', '*.jsx'], { cwd: root, encoding: 'utf8' })
+
+// An empty repository, a fresh `git init` with no commits, or any directory
+// that simply isn't a git repository all make `git ls-files` exit non-zero.
+// That used to crash the whole analyzer with an uncaught exception instead
+// of degrading the way the churn lookup above already does; treat it the
+// same way and fall back to an empty file list.
+let lsFilesOutput = '';
+try {
+  lsFilesOutput = execFileSync('git', ['ls-files', '*.js', '*.mjs', '*.cjs', '*.jsx'], { cwd: root, encoding: 'utf8' });
+} catch { console.warn('Warning: git file listing unavailable; no files to rank.'); }
+const files = lsFilesOutput
   .trim().split(/\r?\n/).filter(Boolean)
   .filter(f => /^(?:source|tools)\//.test(f))
   .filter(f => !/(^|\/)(?:test|tests|coverage|node_modules|dashboard)(\/|$)/.test(f));
 const complexity = new Map(files.map(file => [file, estimateComplexity(fs.readFileSync(path.join(root, file), 'utf8'))]));
-const coverage = coverageByRelativePath(readJsonIfPresent(coverageFile), root);
+const coverageRaw = readJsonIfPresent(coverageFile);
+const coverage = coverageByRelativePath(coverageRaw, root);
 const ranked = rankFiles({ files, churn, complexity, coverage });
-const covered = [...coverage.values()];
-const overallCoverage = covered.length ? covered.reduce((a, b) => a + b, 0) / covered.length : 0;
+// Statement-weighted, matching c8's own "All files" total, not an unweighted
+// mean of per-file percentages (see overallStatementCoverage in risk-lib.js).
+const overallCoverage = overallStatementCoverage(coverageRaw);
 const report = { generatedAt: new Date().toISOString(), weights: { churn: 0.4, complexity: 0.3, coverageGap: 0.3 }, overallCoverage: Number(overallCoverage.toFixed(1)), files: ranked };
 fs.mkdirSync(path.dirname(output), { recursive: true });
 fs.writeFileSync(output, JSON.stringify(report, null, 2));
