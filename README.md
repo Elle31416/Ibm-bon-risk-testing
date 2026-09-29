@@ -146,13 +146,6 @@ Full regression: **94/94 AVA tests pass** (32 upstream + 62 added), `tsd` clean.
 └── UPSTREAM_README.md          # Original Chalk documentation
 ```
 
-## Built across four sessions (arena branches)
-
-Trip Wire was assembled incrementally, one working session per branch, each opened as its own pull request and merged straight into `main`. Every branch is still in the repository if you want to see the isolated diff of a single session rather than the squashed end state:
-
-| 
-
-`main` always reflects the merged, current state described in this README; the arena branches are kept as the traceable record of how it got there.
 
 ## Demo story
 
