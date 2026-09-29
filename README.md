@@ -150,12 +150,7 @@ Full regression: **94/94 AVA tests pass** (32 upstream + 62 added), `tsd` clean.
 
 Trip Wire was assembled incrementally, one working session per branch, each opened as its own pull request and merged straight into `main`. Every branch is still in the repository if you want to see the isolated diff of a single session rather than the squashed end state:
 
-| Branch | What it added | Merged as |
-|---|---|---|
-| [`arena/01a0e245-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e245-ibm-bon-risk-testing) | Unpacked the full Chalk history, fixed four real bugs in the risk-scoring model (statement-weighted coverage, rename-aware churn, deterministic tie-breaking, crash-safety on empty repos), and added test batches 1 and 2 | PR #1 |
-| [`arena/01a0e274-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e274-ibm-bon-risk-testing) | Adapted the dashboard for a mobile-friendly Render deployment | PR #2 |
-| [`arena/01a0e2aa-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e2aa-ibm-bon-risk-testing) | Added test batch 3 (ansi256 model tests plus a server entry-point end-to-end test) and captured individual per-session screenshots | PR #3 |
-| [`arena/01a0e2e4-ibm-bon-risk-testing`](https://github.com/Elle31416/Ibm-bon-risk-testing/tree/arena/01a0e2e4-ibm-bon-risk-testing) | Added the Trip Wire demo-video production package and finalized the results, live-demo link, and evidence | PR #4 |
+| 
 
 `main` always reflects the merged, current state described in this README; the arena branches are kept as the traceable record of how it got there.
 
